@@ -19,6 +19,8 @@ from board_app.forms import (
 from board_app.models import (
     Board, Topic, Post
 )
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -40,11 +42,12 @@ def home_view(request):
     return render(request, 'home_page.html', {'boards': boards, 'page': page})
 
 
-def save_board_form(request, form, template_name, page):
+def save_board_form(request, form, template_name, page, message):
     data = dict()
     if request.method == 'POST':
         if form.is_valid():
             form.save()
+            messages.success(request, message)
             data['form_is_valid'] = True
             boards = Board.objects.all()
             paginator = Paginator(boards, 5)
@@ -58,6 +61,7 @@ def save_board_form(request, form, template_name, page):
                 'boards': boards,
                 'page': page
             })
+
         else:
             data['form_is_valid'] = False
     context = {'form': form, 'page': page}
@@ -67,29 +71,41 @@ def save_board_form(request, form, template_name, page):
 
 
 def create_board(request, page):
+    message = 'board created'
     if request.method == 'POST':
         form = BoardForm(request.POST)
     else:
         form = BoardForm()
-    return save_board_form(request, form, 'includes/partial_create.html', page)
+    return save_board_form(request, form, 'includes/partial_create.html', page, message)
 
 
 def board_update(request, pk, page):
     board = get_object_or_404(Board, pk=pk)
+    message = 'board updated'
     if request.method == 'POST':
         form = BoardForm(request.POST, instance=board)
+
     else:
         form = BoardForm(instance=board)
-    return save_board_form(request, form, 'includes/partial_update.html', page)
+    return save_board_form(request, form, 'includes/partial_update.html', page, message)
 
 
 def board_delete(request, pk, page):
     board = get_object_or_404(Board, pk=pk)
     data = dict()
+
     if request.method == 'POST':
+        messages.success(request, 'board deleted')
         board.delete()
         data['form_is_valid'] = True
         boards = Board.objects.all()
+        paginator = Paginator(boards, 5)
+        try:
+            boards = paginator.page(page)
+        except PageNotAnInteger:
+            boards = paginator.page(1)
+        except EmptyPage:
+            boards = paginator.page(paginator.num_pages)
         data['html_board_list'] = render_to_string('includes/partial_list.html', {
             'boards': boards,
             'page': page

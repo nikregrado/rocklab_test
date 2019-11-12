@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib.auth import views as auth_views
 from accounts import views as accounts_views
 from board_app import views as views
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.contrib import admin
-
+from django.contrib.flatpages import views as views_flatpage
 # from django.conf.urls.static import static
 # from djangotask import settings
 
@@ -66,6 +66,10 @@ urlpatterns = [
          name='password_reset_complete'),
     path('settings/account/',
          accounts_views.UserUpdateView.as_view(), name='my_account'),
-    path('putin/', views.put_in_boards, name='putin')
+    path('putin/', views.put_in_boards, name='putin'),
+    path('privacy/', views_flatpage.flatpage,
+         {'url': '/privacy/'}, name='about'),
+    path('terms/', views_flatpage.flatpage,
+         {'url': '/terms/'}, name='license'),
     # static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ]
