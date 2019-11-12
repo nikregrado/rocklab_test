@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+
+{% block content %}
+    <p class="waypoint">
+        TEST
+    </p>
+    <p>
+     <button type="button"
+                class="btn btn-primary js-create-board"
+                data-url="{% url 'create_board' %}">
+          <span class="glyphicon glyphicon-plus"></span>
+          New board
+     </button>
+    </p>
+    <table class="table" id='board_table'>
+        <thead class="thead-inverse">
+        <tr>
+            <th>Board</th>
+            <th>Posts</th>
+            <th>Topics</th>
+            <th>Last Post</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% include 'includes/partial_list.html' %}
+        </tbody>
+    </table>
+
+{#    <script>#}
+{#            var infinite = new Waypoint.Infinite({#}
+{#              element: $('.loading')[0],#}
+{#              onBeforePageLoad: function () {#}
+{#                $('.loading').show();#}
+{#                console.log('Show');#}
+{#              },#}
+{#              onAfterPageLoad: function ($items) {#}
+{#                $('.loading').hide();#}
+{#                console.log('Hide');#}
+{#              }#}
+{#            });#}
+{#            infinite.onAfterPageLoad()#}
+{#    </script>#}
+{#    <script>#}
+{#        var waypoint = new Waypoint.Infinite({#}
+{#            element: document.getElementById('waypoint'),#}
+{#            handler: function (direction) {#}
+{#                console.log('Scrolled to waypoint!')#}
+{#            }#}
+{#        })#}
+{#    </script>#}
+    <div class="modal fade" id="modal-board">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+{% block javascript %}
+    <script src="{% static 'js/board.js' %}"></script>
+{% endblock %} 
+{% endblock %}

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  server:
+    build: .
+    container_name: djangotask_server
+    working_dir: /var/www/djangotask
+    ports:
+      - "$SERVER_PORT:$SERVER_PORT"
+    volumes:
+      - ./:/var/www/djangotask
+    command: python manage.py runserver 0.0.0.0:$SERVER_PORT
+    environment:
+      - DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+      - PGHOST=$DATABASE_HOST
+    env_file:
+      - .env
+    depends_on:
+      - database
+  database:
+    container_name: djangotask_database
+    image: postgres:latest
+    volumes:
+      - ./initial.sql:/docker-entrypoint-initdb.d/initial.sql
