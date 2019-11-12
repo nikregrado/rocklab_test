@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib.auth import views as auth_views
 from accounts import views as accounts_views
 from board_app import views as views
-from django.conf.urls import url, path, re_path
+from django.urls import path, re_path
 from django.contrib import admin
 
 # from django.conf.urls.static import static
